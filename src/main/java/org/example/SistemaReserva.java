@@ -56,13 +56,12 @@ public class SistemaReserva {
     }
 
 
-    public Reserva crearReserva(String idReserva, String idCliente, String tipoHabitacion, Date fechaInicio, Date fechaFin) throws ReservaInvalidaException, HabitacionNoDisponibleException {
+    public Reserva crearReserva(String idReserva, String idCliente, String tipoHabitacion, Date fechaInicio, Date fechaFin, String tipoServicio) throws ReservaInvalidaException, HabitacionNoDisponibleException {
         Client cliente = BuscarCliente(idCliente);
         Habitacion habitacion = BuscarHabitacionDisponible(tipoHabitacion);
 
         Reserva reserva = new Reserva(idReserva, cliente, habitacion, fechaInicio, fechaFin);
         reservas.add(reserva);
-
         notificadorReservas.notificarObservador("Nueva reserva creada: " + idReserva + " para el cliente: " + cliente.getNombre());
         return reserva;
 

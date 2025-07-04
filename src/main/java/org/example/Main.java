@@ -138,10 +138,21 @@ public class Main {
             System.out.println("Cliente no encontrado. Por favor, registre al cliente primero.");
             return;
         }
-        System.out.print("Ingrese ID de la habitacion: ");
-        String habitacionId = scanner.nextLine();
-        if (sistemaReserva.BuscarHabitacionDisponible(habitacionId) == null) {
-            System.out.println("Habitación no disponible. Por favor, elija otra habitación.");
+        System.out.print("Ingrese tipo de la habitacion: ");
+        System.out.println("Tipos de habitaciones disponibles: ");
+        System.out.println("1. Simple");
+        System.out.println("2. Doble");
+        System.out.println("3. Suite");
+        System.out.print("Seleccione el tipo de habitación: ");
+        String tipoHabitacion = scanner.nextLine();
+        if(tipoHabitacion.equals("1")){
+            tipoHabitacion = "Simple";
+        } else if(tipoHabitacion.equals("2")) {
+            tipoHabitacion = "Doble";
+        } else if(tipoHabitacion.equals("3")) {
+            tipoHabitacion = "Suite";
+        } else {
+            System.out.println("Tipo de habitación no reconocido. No se creará la reserva.");
             return;
         }
         System.out.print("Ingrese fecha de inicio (dd/MM/yyyy): ");
@@ -151,7 +162,28 @@ public class Main {
         try {
             Date fechaInicio = new SimpleDateFormat("dd/MM/yyyy").parse(Inicio);
             Date fechaFin = new SimpleDateFormat("dd/MM/yyyy").parse(Fin);
-            sistemaReserva.crearReserva(id, clienteId, habitacionId, fechaInicio, fechaFin);
+            System.out.print("Desea agregar un servicio a la reserva? (si/no): ");
+            String respuesta = scanner.nextLine();
+            String tipoServicio = "";
+            if(respuesta.equalsIgnoreCase("si")){
+                System.out.println("Tipos de servicios disponibles: ");
+                System.out.println("1. Desayuno");
+                System.out.println("2. Parking");
+                System.out.println("3. Spa");
+                System.out.print("Seleccione el tipo de servicio: ");
+                tipoServicio = scanner.nextLine();
+                if(tipoServicio.equals("1")) {
+                    tipoServicio = "Desayuno";
+                } else if(tipoServicio.equals("2")) {
+                    tipoServicio = "Parking";
+                } else if(tipoServicio.equals("3")) {
+                    tipoServicio = "Spa";
+                } else {
+                    System.out.println("Tipo de servicio no reconocido. No se agregará ningún servicio.");
+                    tipoServicio = "";
+                }
+            }
+            Reserva reserva = sistemaReserva.crearReserva(id, clienteId, tipoHabitacion, fechaInicio, fechaFin, tipoServicio);
             System.out.println("\nReserva registrada exitosamente.");
         } catch (ParseException e) {
             System.err.println("\nError al parsear las fechas: " + e.getMessage());
