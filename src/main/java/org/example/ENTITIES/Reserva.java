@@ -3,6 +3,7 @@ package org.example.ENTITIES;
 import org.example.ENTITIES.HABITACIONES.Habitacion;
 import org.example.INTERFACES.Servicio;
 import org.example.SERVICES.FACTORY.ServicioFactory;
+import org.example.SERVICES.ServicioBase;
 
 import java.util.Date;
 
@@ -30,23 +31,22 @@ private double costoTotal;
         this.habitacion = habitacion;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.servicios = new ServicioBase();
+        this.estado = "Pendiente";
+        this.habitacion.setDisponible(false);
+        this.costoTotal = calcularCostoTotal();
     }
 
     public void agregarServicio(String tipoServicio){
         this.servicios = ServicioFactory.crearServicio(tipoServicio, this.servicios );
         this.costoTotal = calcularCostoTotal();
-
     }
 
-    private double calcularCostoTotal() {
-        long diasEstancia = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24);
-        return (habitacion.getPrecioPorNoche() * diasEstancia) + servicios.getCosto();
+    public double calcularCostoTotal() {
+        long diasEstancia = Math.max(1, (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24));
+        return (habitacion.getPrecioPorNoche() * diasEstancia) + (servicios != null ? servicios.getCosto() : 0.0);
     }
 
-    public void confirmarReserva(){
-        this.estado = "Confirmada";
-        habitacion.setDisponible(false);
-    }
 
     public void cancelarReserva(){
         this.estado = "Cancelada";
@@ -88,15 +88,14 @@ private double costoTotal;
 
     @Override
     public String toString() {
-        return "Reserva{" +
-                "id='" + id + '\'' +
-                ", cliente=" + cliente +
-                ", habitacion=" + habitacion +
-                ", fechaInicio=" + fechaInicio +
-                ", fechaFin=" + fechaFin +
-                ", servicios=" + servicios +
-                ", estado='" + estado + '\'' +
-                ", costoTotal=" + costoTotal +
-                '}';
+        return "\n======================================================================================================" +
+                "\nId reserva: " + id  +
+                "\nCliente:" + cliente.getNombre() + " Id: " + cliente.getId() +
+                "\nHabitacion:" + habitacion +
+                "\nFecha Inicio:" + fechaInicio +
+                "\nFecha Fin:" + fechaFin +
+                "\nServicios:" + ((servicios != null && !(servicios instanceof ServicioBase)) ? servicios.toString() : "Sin servicios adicionales") +
+                "\nCosto Total:" + getCostoTotal() +
+                "\n=====================================================================================================";
     }
 }

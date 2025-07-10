@@ -2,10 +2,18 @@ package org.example.SERVICES.DECORATORS;
 
 import org.example.INTERFACES.Servicio;
 
-public class DesayunoDecorator extends ServicioDecorator{
+/*-------------------------DECORATOR-------------------------
+* Permite agregar funcionalidades a un objeto de tipo Servicio
+* -----------------------------------------------------------
+* */
+public class DesayunoDecorator extends ServicioDecorator {
 
     public DesayunoDecorator(Servicio servicio) {
         super(servicio);
+    }
+
+    public String toString() {
+        return servicio.toString() + " Desayuno";
     }
 
     @Override

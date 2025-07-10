@@ -20,6 +20,14 @@ protected int capacidad;
         this.capacidad = capacidad;
     }
 
+    public Habitacion(String numero, String tipo, double precioPorNoche, int capacidad) {
+        this.numero = numero;
+        this.tipo = tipo;
+        this.precioPorNoche = precioPorNoche;
+        this.capacidad = capacidad;
+        this.disponible = true; //Por defecto, una habitacion nueva esta disponible
+    }
+
     public abstract String getDescription();
 
     public String getNumero() {
@@ -42,17 +50,17 @@ protected int capacidad;
         return disponible;
     }
 
+
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
 
     @Override
     public String toString() {
-        return "Habitacion: " +
-                "numero='" + numero +
-                ", tipo='" + tipo  +
-                ", precioPorNoche=" + precioPorNoche +
-                ", disponible=" + disponible +
-                ", capacidad=" + capacidad;
+        return  "numero: " + numero +
+                ", tipo: " + tipo  +
+                ", precio por noche: " + precioPorNoche +
+                ", disponible: " + disponible +
+                ", capacidad: " + capacidad;
     }
 }

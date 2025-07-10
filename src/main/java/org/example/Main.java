@@ -4,11 +4,12 @@ import org.example.ENTITIES.HABITACIONES.Habitacion;
 import org.example.ENTITIES.Reserva;
 import org.example.EXCEPTIONS.*;
 import org.example.ENTITIES.Client;
-import org.example.SistemaReserva;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -23,6 +24,10 @@ public class Main {
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
+            if (opcion < 0 || opcion > 10) {
+                System.out.println("Opción no válida. Por favor, intente de nuevo.");
+                continue;
+            }
 
             switch (opcion) {
                 case 1:
@@ -35,10 +40,10 @@ public class Main {
                     sistemaReserva.mostrarClientes();
                     break;
                 case 4:
-                    sistemaReserva.habitacionesDisponibles();
+                    mostrarHabitaciones();
                     break;
                 case 5:
-                    buscarHabitacionDisponible(scanner);
+                    buscarHabitacionesDisponibles(scanner);
                     break;
                 case 6:
                     registrarReserva(scanner);
@@ -53,9 +58,6 @@ public class Main {
                     buscarReserva(scanner);
                     break;
                 case 10:
-                    reservasPorCliente(scanner);
-                    break;
-                case 11:
                     sistemaReserva.mostrarEstadoSistema();
                     break;
                 case 0:
@@ -68,6 +70,7 @@ public class Main {
     }
 
     private static void menu() {
+        System.out.println("\n");
         System.out.println("┌─────────────────────────────────────┐");
         System.out.println("│           BOOKING SYSTEM            │");
         System.out.println("├─────────────────────────────────────┤");
@@ -80,8 +83,7 @@ public class Main {
         System.out.println("│ 7-> Cancelar reserva                │");
         System.out.println("│ 8-> Mostrar reservas                │");
         System.out.println("│ 9-> Buscar reserva                  │");
-        System.out.println("│ 10->Reservas por cliente            │");
-        System.out.println("│ 11->Estado del sistema              │");
+        System.out.println("│ 10->Estado del sistema              │");
         System.out.println("│ 0-> Salir                           │");
         System.out.println("└─────────────────────────────────────┘");
     }
@@ -97,10 +99,22 @@ public class Main {
         }
         System.out.print("Ingrese nombre del cliente: ");
         String nombre = scanner.nextLine();
+        if (nombre.isEmpty()) {
+            System.out.println("El nombre del cliente no puede estar vacío.");
+            return;
+        }
         System.out.print("Ingrese email del cliente: ");
         String email = scanner.nextLine();
+        if (email.isEmpty()) {
+            System.out.println("El email del cliente no puede estar vacío.");
+            return;
+        }
         System.out.print("Ingrese telefono del cliente: ");
         String telefono = scanner.nextLine();
+        if (telefono.isEmpty()) {
+            System.out.println("El teléfono del cliente no puede estar vacío.");
+            return;
+        }
         Client cliente = new Client(id, nombre, email, telefono);
         try {
             sistemaReserva.registrarCliente(cliente);
@@ -132,14 +146,22 @@ public class Main {
             System.out.println("La reserva con ID " + id + " ya existe. Por favor, ingrese un ID diferente.");
             return;
         }
+        if (sistemaReserva.habitacionesDisponibles().isEmpty()) {
+            System.out.println("No hay habitaciones disponibles para crear una reserva.");
+            return;
+        }
         System.out.print("Ingrese ID del cliente: ");
         String clienteId = scanner.nextLine();
+        if (clienteId.isEmpty()) {
+            System.out.println("El ID del cliente no puede estar vacío.");
+            return;
+        }
         if(sistemaReserva.BuscarCliente(clienteId) == null) {
             System.out.println("Cliente no encontrado. Por favor, registre al cliente primero.");
             return;
         }
         System.out.print("Ingrese tipo de la habitacion: ");
-        System.out.println("Tipos de habitaciones disponibles: ");
+        System.out.println("Seleccione 1, 2 o 3 para el tipo de habitación:");
         System.out.println("1. Simple");
         System.out.println("2. Doble");
         System.out.println("3. Suite");
@@ -157,8 +179,16 @@ public class Main {
         }
         System.out.print("Ingrese fecha de inicio (dd/MM/yyyy): ");
         String Inicio = scanner.nextLine();
+        if (Inicio.isEmpty()) {
+            System.out.println("La fecha de inicio no puede estar vacía.");
+            return;
+        }
         System.out.print("Ingrese fecha de fin (dd/MM/yyyy): ");
         String Fin = scanner.nextLine();
+        if (Fin.isEmpty()) {
+            System.out.println("La fecha de fin no puede estar vacía.");
+            return;
+        }
         try {
             Date fechaInicio = new SimpleDateFormat("dd/MM/yyyy").parse(Inicio);
             Date fechaFin = new SimpleDateFormat("dd/MM/yyyy").parse(Fin);
@@ -167,17 +197,24 @@ public class Main {
             String tipoServicio = "";
             if(respuesta.equalsIgnoreCase("si")){
                 System.out.println("Tipos de servicios disponibles: ");
-                System.out.println("1. Desayuno");
-                System.out.println("2. Parking");
-                System.out.println("3. Spa");
+                System.out.println("1. spa");
+                System.out.println("2. desayuno");
+                System.out.println("3. parqueo");
+                System.out.println("4. todo incluido");
                 System.out.print("Seleccione el tipo de servicio: ");
                 tipoServicio = scanner.nextLine();
+                if(tipoServicio.isEmpty()) {
+                    System.out.println("El tipo de servicio no puede estar vacío. No se agregará ningún servicio.");
+                    tipoServicio = "";
+                }
                 if(tipoServicio.equals("1")) {
-                    tipoServicio = "Desayuno";
+                    tipoServicio = "spa";
                 } else if(tipoServicio.equals("2")) {
-                    tipoServicio = "Parking";
+                    tipoServicio = "desayuno";
                 } else if(tipoServicio.equals("3")) {
-                    tipoServicio = "Spa";
+                    tipoServicio = "parqueo";
+                } else if(tipoServicio.equals("4")) {
+                    tipoServicio = "todo incluido";
                 } else {
                     System.out.println("Tipo de servicio no reconocido. No se agregará ningún servicio.");
                     tipoServicio = "";
@@ -214,32 +251,32 @@ public class Main {
         }
     }
 
-    private static void reservasPorCliente(Scanner scanner) {
-        System.out.print("Ingrese ID del cliente: ");
-        String idCliente = scanner.nextLine();
-        Client cliente = sistemaReserva.BuscarCliente(idCliente);
-        if (cliente != null) {
-            System.out.println("Reservas del cliente " + cliente.getNombre() + ":");
-            for (Reserva reserva : cliente.getReservas()) {
-                System.out.println(reserva);
-            }
-        } else {
-            System.out.println("Cliente no encontrado.");
-        }
-    }
 
     //=====================METODOS HABITACION========================
-    private static void buscarHabitacionDisponible(Scanner scanner) {
-        System.out.print("Ingrese tipo de habitacion a buscar: ");
+    private static void buscarHabitacionesDisponibles(Scanner scanner) {
+        System.out.println("Tipos de habitaciones disponibles: ");
+        System.out.println("Ingrese simple, doble o suite");
+        System.out.print("Ingrese tipo de habitación a buscar: ");
         String tipo = scanner.nextLine();
-        Habitacion habitacion = sistemaReserva.BuscarHabitacionDisponible(tipo);
-        if (habitacion != null) {
-            System.out.println("Habitación disponible encontrada: " + habitacion);
+        if (tipo.isEmpty()) {
+            System.out.println("Tipo de habitación no puede estar vacío.");
+            return;
+        }
+        var habitacionesDisponibles = sistemaReserva.BuscarHabitacionesDisponibles(tipo);
+        if (habitacionesDisponibles.isEmpty()) {
+            System.out.println("No hay habitaciones disponibles del tipo: " + tipo);
         } else {
-            System.out.println("No hay habitaciones disponibles del tipo " + tipo);
+            System.out.println("Habitaciones disponibles del tipo " + tipo + ":");
+            for (Habitacion habitacion : habitacionesDisponibles) {
+                System.out.println(habitacion);
+            }
         }
     }
 
+    private static void mostrarHabitaciones() {
+        List<Habitacion> habitacions = sistemaReserva.habitacionesDisponibles();
+        habitacions.forEach(System.out::println);
+    }
 
 
 }

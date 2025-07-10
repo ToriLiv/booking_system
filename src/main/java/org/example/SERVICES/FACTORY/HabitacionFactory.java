@@ -5,6 +5,11 @@ import org.example.ENTITIES.HABITACIONES.HabitacionDoble;
 import org.example.ENTITIES.HABITACIONES.HabitacionSimple;
 import org.example.ENTITIES.HABITACIONES.Suite;
 
+/*
+* ------------------------------------FACTORY-------------------------------------
+* Esta clase es responsable de crear instancias diferentes de segun el tipo
+* --------------------------------------------------------------------------------
+* */
 public class HabitacionFactory {
     public static Habitacion crearHabitacion(String tipo, String numero, double precio){
         switch (tipo.toLowerCase()) {

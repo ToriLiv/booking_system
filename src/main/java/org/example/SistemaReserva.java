@@ -13,13 +13,14 @@ import org.example.SERVICES.FACTORY.HabitacionFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SistemaReserva {
     private static SistemaReserva instancia;
-    private List<Client> clientes;
-    private List<Reserva> reservas;
-    private List<Habitacion> habitaciones = new ArrayList<>();
-    private NotificadorReservas notificadorReservas;
+    private final List<Client> clientes;
+    private final List<Reserva> reservas;
+    private final List<Habitacion> habitaciones = new ArrayList<>();
+    private final NotificadorReservas notificadorReservas;
 
     public SistemaReserva() {
         inicializarHabitacion();
@@ -29,6 +30,11 @@ public class SistemaReserva {
         this.reservas = new ArrayList<>();
     }
 
+    /*
+    * -------------------SINGLETON-------------------------
+    * asegura que solo haya una instancia de SistemaReserva
+    * proporciona un punto de acceso global a ella.
+    * */
     public static SistemaReserva getInstancia() {
         if (instancia == null) {
             instancia = new SistemaReserva();
@@ -42,6 +48,7 @@ public class SistemaReserva {
         habitaciones.add(HabitacionFactory.crearHabitacion("suite", "103", 200.0));
         habitaciones.add(HabitacionFactory.crearHabitacion("simple", "104", 50.0));
         habitaciones.add(HabitacionFactory.crearHabitacion("doble", "105", 100.0));
+
     }
 
     public void registrarCliente(Client cliente) throws ClienteDuplicadoException {
@@ -59,12 +66,23 @@ public class SistemaReserva {
     public Reserva crearReserva(String idReserva, String idCliente, String tipoHabitacion, Date fechaInicio, Date fechaFin, String tipoServicio) throws ReservaInvalidaException, HabitacionNoDisponibleException {
         Client cliente = BuscarCliente(idCliente);
         Habitacion habitacion = BuscarHabitacionDisponible(tipoHabitacion);
+        List<Habitacion> BuscarHabitacionesDisponibles = BuscarHabitacionesDisponibles(tipoHabitacion);
 
         Reserva reserva = new Reserva(idReserva, cliente, habitacion, fechaInicio, fechaFin);
+        reserva.agregarServicio(tipoServicio);
         reservas.add(reserva);
+        reserva.calcularCostoTotal();
         notificadorReservas.notificarObservador("Nueva reserva creada: " + idReserva + " para el cliente: " + cliente.getNombre());
         return reserva;
 
+    }
+
+    private Habitacion BuscarHabitacionDisponible(String tipoHabitacion) throws HabitacionNoDisponibleException {
+        List<Habitacion> habitacionesDisponibles = BuscarHabitacionesDisponibles(tipoHabitacion);
+        if (habitacionesDisponibles.isEmpty()) {
+            throw new HabitacionNoDisponibleException("No hay habitaciones disponibles del tipo: " + tipoHabitacion);
+        }
+        return habitacionesDisponibles.get(0); // Retorna la primera habitación disponible del tipo solicitado
     }
 
 
@@ -84,11 +102,10 @@ public class SistemaReserva {
                 .orElse(null);
     }
 
-    public Habitacion BuscarHabitacionDisponible(String tipo){
+    public List<Habitacion> BuscarHabitacionesDisponibles(String tipo){
         return habitaciones.stream()
                 .filter(h -> h.getTipo().equalsIgnoreCase(tipo) && h.isDisponible())
-                .findFirst()
-                .orElse(null);
+                .collect(Collectors.toList());
     }
 
     public Reserva BuscarReserva(String idReserva) {
@@ -101,7 +118,7 @@ public class SistemaReserva {
     public List<Habitacion> habitacionesDisponibles(){
         return habitaciones.stream()
                 .filter(Habitacion::isDisponible)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<Reserva> reservasCliente(String idCliente){
@@ -134,6 +151,7 @@ public class SistemaReserva {
     }
 
     public void mostrarEstadoSistema() {
+        System.out.println("=========================================");
         System.out.println("Estado del sistema de reservas:");
         System.out.println("Clientes registrados: " + clientes.size());
         System.out.println("Reservas realizadas: " + reservas.size());
@@ -144,6 +162,7 @@ public class SistemaReserva {
             List<Reserva> reservasCliente = reservasCliente(cliente.getId());
             System.out.println(cliente.getNombre() + " tiene " + reservasCliente.size() + " reservas.");
         }
+        System.out.println("=========================================");
 
     }
 

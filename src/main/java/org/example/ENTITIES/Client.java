@@ -58,12 +58,11 @@ private List<Reserva> reservas;
 
     @Override
     public String toString() {
-        return  "id=" + id  +
-                ", nombre=" + nombre  +
-                ", email=" + email +
-                ", telefono=" + telefono  +
-                ", reservas=" + reservas;
+        return "\n=========================================================" +
+                "\nId:" + id +
+                "\nNombre:" + nombre +
+                "\nEmail:" + email +
+                "\nTelefono:" + telefono +
+                "\n=========================================================" ;
     }
-
-
 }
