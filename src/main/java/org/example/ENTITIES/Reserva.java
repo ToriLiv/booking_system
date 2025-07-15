@@ -47,7 +47,6 @@ private double costoTotal;
         return (habitacion.getPrecioPorNoche() * diasEstancia) + (servicios != null ? servicios.getCosto() : 0.0);
     }
 
-
     public void cancelarReserva(){
         this.estado = "Cancelada";
         habitacion.setDisponible(true);
@@ -96,6 +95,7 @@ private double costoTotal;
                 "\nFecha Fin:" + fechaFin +
                 "\nServicios:" + ((servicios != null && !(servicios instanceof ServicioBase)) ? servicios.toString() : "Sin servicios adicionales") +
                 "\nCosto Total:" + getCostoTotal() +
+                "\nEstado:" + estado +
                 "\n=====================================================================================================";
     }
 }
