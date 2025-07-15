@@ -95,6 +95,15 @@ public class SistemaReserva {
         notificadorReservas.notificarObservador("Reserva cancelada: " + idReserva + " para el cliente: " + reserva.getCliente().getNombre());;
     }
 
+    public void confirmarReserva(String idReserva) throws ReservaInvalidaException {
+        Reserva reserva = BuscarReserva(idReserva);
+        if (reserva == null) {
+            throw new ReservaInvalidaException("Reserva no encontrada: " + idReserva);
+        }
+        reserva.confirmarReserva();
+        notificadorReservas.notificarObservador("Reserva confirmada: " + idReserva + " para el cliente: " + reserva.getCliente().getNombre());
+    }
+
     public Client BuscarCliente(String idCliente) {
         return clientes.stream()
                 .filter(c -> c.getId().equals(idCliente))

@@ -53,6 +53,11 @@ private double costoTotal;
 
     }
 
+    public void confirmarReserva() {
+        this.estado = "Confirmada";
+        habitacion.setDisponible(false);
+    }
+
     public String getId() {
         return id;
     }

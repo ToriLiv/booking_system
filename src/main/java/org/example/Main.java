@@ -24,7 +24,7 @@ public class Main {
             System.out.print("Seleccione una opción: ");
             opcion = scanner.nextInt();
             scanner.nextLine();
-            if (opcion < 0 || opcion > 10) {
+            if (opcion < 0 || opcion > 11) {
                 System.out.println("Opción no válida. Por favor, intente de nuevo.");
                 continue;
             }
@@ -52,12 +52,15 @@ public class Main {
                     cancelarReserva(scanner);
                     break;
                 case 8:
-                    sistemaReserva.mostrarReservas();
+                    confirmarReserva(scanner);
                     break;
                 case 9:
-                    buscarReserva(scanner);
+                    sistemaReserva.mostrarReservas();
                     break;
                 case 10:
+                    buscarReserva(scanner);
+                    break;
+                case 11:
                     sistemaReserva.mostrarEstadoSistema();
                     break;
                 case 0:
@@ -81,9 +84,10 @@ public class Main {
         System.out.println("│ 4-> Habitaciones disponibles        │");
         System.out.println("│ 5-> Buscar habitaciones disponibles │");
         System.out.println("│ 6-> Crear reserva                   │");
-        System.out.println("│ 7-> Cancelar reserva                │");
-        System.out.println("│ 8-> Mostrar reservas                │");
-        System.out.println("│ 9-> Buscar reserva                  │");
+        System.out.println("│ 7-> Cancelar  reserva               │");
+        System.out.println("│ 8-> Confirmar reserva               │");
+        System.out.println("│ 9-> Mostrar reservas                │");
+        System.out.println("│ 10->Buscar reserva                  │");
         System.out.println("│ 10->Estado del sistema              │");
         System.out.println("│ 0-> Salir                           │");
         System.out.println("└─────────────────────────────────────┘");
@@ -226,6 +230,17 @@ public class Main {
         } catch (ParseException e) {
             System.err.println("\nError al parsear las fechas: " + e.getMessage());
         } catch (ReservaInvalidaException | HabitacionNoDisponibleException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static void confirmarReserva(Scanner scanner) {
+        System.out.print("Ingrese ID de la reserva a confirmar: ");
+        String idReserva = scanner.nextLine();
+        try {
+            sistemaReserva.confirmarReserva(idReserva);
+            System.out.println("\nReserva confirmada exitosamente.");
+        } catch (ReservaInvalidaException e) {
             System.err.println(e.getMessage());
         }
     }
