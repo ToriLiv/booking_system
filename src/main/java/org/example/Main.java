@@ -84,11 +84,11 @@ public class Main {
         System.out.println("│ 4-> Habitaciones disponibles        │");
         System.out.println("│ 5-> Buscar habitaciones disponibles │");
         System.out.println("│ 6-> Crear reserva                   │");
-        System.out.println("│ 7-> Cancelar  reserva               │");
+        System.out.println("│ 7-> Cancelar reserva               │");
         System.out.println("│ 8-> Confirmar reserva               │");
         System.out.println("│ 9-> Mostrar reservas                │");
         System.out.println("│ 10->Buscar reserva                  │");
-        System.out.println("│ 10->Estado del sistema              │");
+        System.out.println("│ 11->Estado del sistema              │");
         System.out.println("│ 0-> Salir                           │");
         System.out.println("└─────────────────────────────────────┘");
     }
