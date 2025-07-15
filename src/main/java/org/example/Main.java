@@ -84,7 +84,7 @@ public class Main {
         System.out.println("│ 4-> Habitaciones disponibles        │");
         System.out.println("│ 5-> Buscar habitaciones disponibles │");
         System.out.println("│ 6-> Crear reserva                   │");
-        System.out.println("│ 7-> Cancelar reserva               │");
+        System.out.println("│ 7-> Cancelar reserva                │");
         System.out.println("│ 8-> Confirmar reserva               │");
         System.out.println("│ 9-> Mostrar reservas                │");
         System.out.println("│ 10->Buscar reserva                  │");
@@ -197,6 +197,10 @@ public class Main {
         try {
             Date fechaInicio = new SimpleDateFormat("dd/MM/yyyy").parse(Inicio);
             Date fechaFin = new SimpleDateFormat("dd/MM/yyyy").parse(Fin);
+            if(fechaFin.before(fechaInicio)) {
+                System.out.println("La fecha de inicio debe ser anterior a la fecha de fin.");
+                return;
+            }
             System.out.print("Desea agregar un servicio a la reserva? (si/no): ");
             String respuesta = scanner.nextLine();
             String tipoServicio = "";
